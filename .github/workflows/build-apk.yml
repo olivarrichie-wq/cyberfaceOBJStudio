@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -20,9 +21,14 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Extract project
+      - name: Find and extract project ZIP
         run: |
-          unzip CyberfaceOBJStudioAndroid_Project.zip
+          ZIP=$(find . -maxdepth 2 -iname '*.zip' | head -n 1)
+          if [ -z "$ZIP" ]; then
+            echo "Walang ZIP file sa repository."
+            exit 1
+          fi
+          unzip "$ZIP"
           cd CyberfaceOBJStudioAndroid
           gradle assembleDebug
 
